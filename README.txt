@@ -1,2 +1,2 @@
  jawa
- jawi
+ jawir
