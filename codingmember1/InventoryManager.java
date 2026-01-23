@@ -10,14 +10,12 @@ public class InventoryManager {
 
     // METHOD 1: Add
     public void addItem(Item item) {
-        // You might want to check if ID exists before adding
         inventoryList.add(item);
         System.out.println("Item added successfully.");
     }
 
     // METHOD 2: Remove
     public void removeItem(String id) {
-        // Logic to removeIf or loop and remove
         boolean removed = inventoryList.removeIf(item -> item.getId().equals(id));
         if(removed) {
             System.out.println("Item removed.");
@@ -48,10 +46,11 @@ public class InventoryManager {
         return results;
     }
     
-    // Getter for Role 4 (The Archivist) to save data
+    // Getter for member 4 (The Archivist) to save data
     public ArrayList<Item> getInventoryList() {
         return inventoryList;
     }
 
 }
+
 
