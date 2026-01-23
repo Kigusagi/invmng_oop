@@ -1,3 +1,5 @@
+package qawi;
+
 import java.util.ArrayList;
 
 public class UserManager {
@@ -6,12 +8,10 @@ public class UserManager {
     private User loggedInUser;
 
     public UserManager() {
-        // Hardcoded users for testing
         userList.add(new Admin("admin", "admin123"));
         userList.add(new Staff("staff", "staff123"));
     }
 
-    // Login system
     public boolean authenticate(String username, String password) {
         for (User user : userList) {
             if (user.getUsername().equals(username) &&
@@ -27,7 +27,6 @@ public class UserManager {
         return loggedInUser;
     }
 
-    // Permission checking (used by Main/Menu)
     public boolean canAddItem() {
         return loggedInUser != null && loggedInUser.canAddItem();
     }
@@ -36,7 +35,6 @@ public class UserManager {
         return loggedInUser != null && loggedInUser.canUpdateQuantity();
     }
 
-    // Optional: register new users (Admin feature)
     public void registerUser(User user) {
         userList.add(user);
     }

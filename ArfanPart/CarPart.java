@@ -1,4 +1,6 @@
-class CarPart extends Item {
+package ArfanPart;
+
+public class CarPart extends Item {
     private String modelCompatibility;
 
     public CarPart(String id, String name, int quantity, double price, String modelCompatibility) {

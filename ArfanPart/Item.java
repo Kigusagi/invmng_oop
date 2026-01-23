@@ -1,4 +1,6 @@
-abstract class Item {
+package ArfanPart;
+
+public abstract class Item {
     private String id;
     private String name;
     private int quantity;
@@ -43,5 +45,8 @@ abstract class Item {
         this.price = price;
     }
 
-    public abstract String toString();
+    @Override
+    public String toString() {
+        return getId() + "," + getName() + "," + getQuantity() + "," + getPrice();
+    }
 }

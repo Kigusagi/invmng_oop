@@ -1,3 +1,5 @@
+package qawi;
+
 public abstract class User {
     private String username;
     private String password;
@@ -9,7 +11,6 @@ public abstract class User {
         this.role = role;
     }
 
-    // Encapsulation (Getters)
     public String getUsername() {
         return username;
     }
@@ -22,7 +23,6 @@ public abstract class User {
         return role;
     }
 
-    // Polymorphism: each role defines its own permission
     public abstract boolean canAddItem();
     public abstract boolean canUpdateQuantity();
 }

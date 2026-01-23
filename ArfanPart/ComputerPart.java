@@ -1,4 +1,6 @@
-class ComputerPart extends Item {
+package ArfanPart;
+
+public class ComputerPart extends Item {
     private String brand;
     private String specs;
 

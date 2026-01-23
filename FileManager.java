@@ -4,6 +4,9 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import ArfanPart.Item;
+import ArfanPart.ComputerPart;
+import ArfanPart.CarPart;
 
 public class FileManager {
 
@@ -45,7 +48,7 @@ public class FileManager {
                             data[5]
                         )
                     );
-                } 
+                }
                 else if (data.length == 5) {
                     inventoryList.add(
                         new CarPart(
