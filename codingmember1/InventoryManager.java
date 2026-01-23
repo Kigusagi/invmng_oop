@@ -4,8 +4,8 @@ public class InventoryManager {
     // The main memory storage for the application
     private ArrayList<Item> inventoryList;
 
-    public InventoryManager() {
-        this.inventoryList = new ArrayList<>();
+    public InventoryManager(ArrayList<Item> startingInventory) {
+        this.inventoryList = startingInventory;
     }
 
     // METHOD 1: Add
@@ -54,3 +54,4 @@ public class InventoryManager {
     }
 
 }
+
