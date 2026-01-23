@@ -52,4 +52,5 @@ public class InventoryManager {
     public ArrayList<Item> getInventoryList() {
         return inventoryList;
     }
+
 }
