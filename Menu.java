@@ -1,13 +1,10 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import codingmember1.InventoryManager;
 import qawi.UserManager;
-import qawi.User;
-import qawi.Admin;
 import ArfanPart.Item;
 import ArfanPart.ComputerPart;
 import ArfanPart.CarPart;
@@ -17,7 +14,6 @@ public class Menu extends JFrame {
     private UserManager userManager;
     private FileManager fileManager;
 
-    // GUI Components
     private JTextField nameField;
     private JTextField priceField;
     private JTextField quantityField;
@@ -46,28 +42,23 @@ public class Menu extends JFrame {
         setSize(1100, 800);
         setLocationRelativeTo(null);
 
-        // Set layout
         setLayout(new BorderLayout());
 
-        // Create main panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Top panel for input section
         JPanel inputPanel = createInputPanel();
         mainPanel.add(inputPanel, BorderLayout.NORTH);
 
-        // Center panel for table
         JPanel tablePanel = createTablePanel();
         mainPanel.add(tablePanel, BorderLayout.CENTER);
 
-        // Bottom panel for status and controls
         JPanel bottomPanel = createBottomPanel();
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
 
-        // Simulate admin login to bypass authentication
-        simulateAdminLogin();
+        userManager.simulateAdminLogin();
+        updateUserStatus();
     }
 
     private JPanel createInputPanel() {
@@ -79,7 +70,6 @@ public class Menu extends JFrame {
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.anchor = GridBagConstraints.WEST;
 
-        // Row 0: Item Name and Price
         gbc.gridx = 0; gbc.gridy = 0;
         inputPanel.add(new JLabel("Item Name:"), gbc);
 
@@ -104,7 +94,6 @@ public class Menu extends JFrame {
         quantityField.setToolTipText("Enter the quantity of the item");
         inputPanel.add(quantityField, gbc);
 
-        // Row 1: Item Type
         gbc.gridx = 0; gbc.gridy = 1;
         inputPanel.add(new JLabel("Item Type:"), gbc);
 
@@ -113,7 +102,6 @@ public class Menu extends JFrame {
         itemTypeCombo.addActionListener(e -> updateAdditionalFields());
         inputPanel.add(itemTypeCombo, gbc);
 
-        // Row 2: Additional Fields (Brand/Specs or Vehicle)
         gbc.gridx = 0; gbc.gridy = 2;
         gbc.gridwidth = 6;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -145,23 +133,21 @@ public class Menu extends JFrame {
         gbc2.gridx = 5;
         vehicleField = new JTextField(15);
         vehicleField.setToolTipText("Enter the vehicle compatibility for car part");
-        vehicleField.setVisible(false); // Initially hidden
+        vehicleField.setVisible(false);
         additionalFieldsPanel.add(vehicleField, gbc2);
 
         inputPanel.add(additionalFieldsPanel, gbc);
 
-        // Row 3: Add to List button
         gbc.gridx = 0; gbc.gridy = 3;
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.NONE;
         JButton addButton = new JButton("Add to List");
-        addButton.setBackground(new Color(70, 130, 180)); // Steel blue
+        addButton.setBackground(new Color(70, 130, 180));
         addButton.setForeground(Color.WHITE);
         addButton.setFocusPainted(false);
         addButton.setPreferredSize(new Dimension(120, 30));
         inputPanel.add(addButton, gbc);
 
-        // Add action listener to the button
         addButton.addActionListener(e -> addToInventory());
 
         return inputPanel;
@@ -186,54 +172,48 @@ public class Menu extends JFrame {
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBorder(BorderFactory.createTitledBorder("Inventory Items"));
 
-        // Define column names
         String[] columnNames = {"ID", "Name", "Price", "Quantity", "Total", "Type", "Details"};
 
-        // Create table model
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Make table non-editable
+                return false;
             }
         };
 
-        // Create table
         inventoryTable = new JTable(tableModel);
         inventoryTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         inventoryTable.setFillsViewportHeight(true);
 
-        // Set column widths
-        inventoryTable.getColumnModel().getColumn(0).setPreferredWidth(80);  // ID
-        inventoryTable.getColumnModel().getColumn(1).setPreferredWidth(150); // Name
-        inventoryTable.getColumnModel().getColumn(2).setPreferredWidth(80);  // Price
-        inventoryTable.getColumnModel().getColumn(3).setPreferredWidth(80);  // Quantity
-        inventoryTable.getColumnModel().getColumn(4).setPreferredWidth(80);  // Total
-        inventoryTable.getColumnModel().getColumn(5).setPreferredWidth(100); // Type
-        inventoryTable.getColumnModel().getColumn(6).setPreferredWidth(200); // Details
+        inventoryTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+        inventoryTable.getColumnModel().getColumn(1).setPreferredWidth(150);
+        inventoryTable.getColumnModel().getColumn(2).setPreferredWidth(80);
+        inventoryTable.getColumnModel().getColumn(3).setPreferredWidth(80);
+        inventoryTable.getColumnModel().getColumn(4).setPreferredWidth(80);
+        inventoryTable.getColumnModel().getColumn(5).setPreferredWidth(100);
+        inventoryTable.getColumnModel().getColumn(6).setPreferredWidth(200);
 
-        // Add table to scroll pane
         JScrollPane scrollPane = new JScrollPane(inventoryTable);
         scrollPane.setPreferredSize(new Dimension(1050, 350));
 
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Add button panel below the table
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         JButton deleteButton = new JButton("Delete Selected");
-        deleteButton.setBackground(new Color(220, 20, 60)); // Crimson
+        deleteButton.setBackground(new Color(220, 20, 60));
         deleteButton.setForeground(Color.WHITE);
         deleteButton.addActionListener(e -> deleteSelectedItem());
         buttonPanel.add(deleteButton);
 
         JButton updateQtyButton = new JButton("Update Quantity");
-        updateQtyButton.setBackground(new Color(255, 165, 0)); // Orange
+        updateQtyButton.setBackground(new Color(255, 165, 0));
         updateQtyButton.setForeground(Color.WHITE);
         updateQtyButton.addActionListener(e -> updateSelectedQuantity());
         buttonPanel.add(updateQtyButton);
 
         JButton searchButton = new JButton("Search Item");
-        searchButton.setBackground(new Color(106, 90, 205)); // Slate Blue
+        searchButton.setBackground(new Color(106, 90, 205));
         searchButton.setForeground(Color.WHITE);
         searchButton.addActionListener(e -> searchItem());
         buttonPanel.add(searchButton);
@@ -247,18 +227,15 @@ public class Menu extends JFrame {
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Status label
         statusLabel = new JLabel("Ready");
         statusLabel.setFont(new Font("Arial", Font.PLAIN, 12));
         bottomPanel.add(statusLabel, BorderLayout.WEST);
 
-        // Welcome label
         welcomeLabel = new JLabel("Welcome to the Inventory Management System");
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 14));
         welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
         bottomPanel.add(welcomeLabel, BorderLayout.CENTER);
 
-        // Control buttons
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         JButton refreshButton = new JButton("Refresh");
@@ -266,7 +243,7 @@ public class Menu extends JFrame {
         controlPanel.add(refreshButton);
 
         JButton saveButton = new JButton("Save Data");
-        saveButton.setBackground(new Color(34, 139, 34)); // Forest green
+        saveButton.setBackground(new Color(34, 139, 34));
         saveButton.setForeground(Color.WHITE);
         saveButton.addActionListener(e -> saveData());
         controlPanel.add(saveButton);
@@ -277,123 +254,48 @@ public class Menu extends JFrame {
     }
 
     private void setupEventHandlers() {
-        // Add Enter key listener to trigger add action
         ActionListener addListener = e -> addToInventory();
         nameField.addActionListener(addListener);
         priceField.addActionListener(addListener);
         quantityField.addActionListener(addListener);
     }
 
-    private void simulateAdminLogin() {
-        // Create and set a default admin user to bypass login
-        User adminUser = new Admin("admin", "admin123");
-        userManager.authenticate("admin", "admin123");
-        updateUserStatus();
-    }
-
     private void updateUserStatus() {
-        User currentUser = userManager.getLoggedInUser();
-        if (currentUser != null) {
-            welcomeLabel.setText("Welcome, " + currentUser.getUsername() + " (" + currentUser.getRole() + ")");
-        }
+        welcomeLabel.setText(userManager.getUserStatusMessage());
     }
 
     private void addToInventory() {
-        try {
-            // Validate input fields
-            String name = nameField.getText().trim();
-            if (name.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please enter an item name.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                nameField.requestFocus();
-                return;
-            }
+        String name = nameField.getText().trim();
+        String priceText = priceField.getText().trim();
+        String quantityText = quantityField.getText().trim();
+        String selectedType = (String) itemTypeCombo.getSelectedItem();
+        String brand = brandField.getText().trim();
+        String specs = specsField.getText().trim();
+        String vehicle = vehicleField.getText().trim();
 
-            String priceText = priceField.getText().trim();
-            if (priceText.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please enter a price.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                priceField.requestFocus();
-                return;
-            }
+        String result = inventoryManager.validateAndAddItem(name, priceText, quantityText, selectedType, brand, specs, vehicle);
 
-            String quantityText = quantityField.getText().trim();
-            if (quantityText.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please enter a quantity.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                quantityField.requestFocus();
-                return;
-            }
-
-            double price = Double.parseDouble(priceText);
-            if (price <= 0) {
-                JOptionPane.showMessageDialog(this, "Price must be greater than zero.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                priceField.requestFocus();
-                return;
-            }
-
-            int quantity = Integer.parseInt(quantityText);
-            if (quantity <= 0) {
-                JOptionPane.showMessageDialog(this, "Quantity must be greater than zero.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                quantityField.requestFocus();
-                return;
-            }
-
-            String selectedType = (String) itemTypeCombo.getSelectedItem();
-            Item newItem;
-
-            // Generate a unique ID
-            String id = generateItemId();
-
-            if ("Computer Part".equals(selectedType)) {
-                String brand = brandField.getText().trim();
-                String specs = specsField.getText().trim();
-
-                if (brand.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please enter a brand for the computer part.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                    brandField.requestFocus();
-                    return;
-                }
-
-                if (specs.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please enter specifications for the computer part.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                    specsField.requestFocus();
-                    return;
-                }
-
-                newItem = new ComputerPart(id, name, quantity, price, brand, specs);
-            } else { // Car Part
-                String vehicle = vehicleField.getText().trim();
-
-                if (vehicle.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please enter vehicle compatibility for the car part.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                    vehicleField.requestFocus();
-                    return;
-                }
-
-                newItem = new CarPart(id, name, quantity, price, vehicle);
-            }
-
-            // Add to inventory
-            inventoryManager.addItem(newItem);
-
-            // Refresh table
+        if ("SUCCESS".equals(result)) {
             refreshTable();
-
-            // Clear input fields
             clearInputFields();
-
             statusLabel.setText("Item added successfully: " + name);
             JOptionPane.showMessageDialog(this, "Item added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Please enter valid numbers for price and quantity.", "Input Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error adding item: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, result, "Validation Error", JOptionPane.WARNING_MESSAGE);
+            if (result.contains("item name")) {
+                nameField.requestFocus();
+            } else if (result.contains("price")) {
+                priceField.requestFocus();
+            } else if (result.contains("quantity")) {
+                quantityField.requestFocus();
+            } else if (result.contains("brand")) {
+                brandField.requestFocus();
+            } else if (result.contains("specifications")) {
+                specsField.requestFocus();
+            } else if (result.contains("vehicle")) {
+                vehicleField.requestFocus();
+            }
         }
-    }
-
-    private String generateItemId() {
-        // Generate a unique ID based on current inventory size
-        int count = inventoryManager.getInventoryList().size() + 1;
-        return "ITEM-" + String.format("%04d", count);
     }
 
     private void clearInputFields() {
@@ -407,10 +309,8 @@ public class Menu extends JFrame {
     }
 
     private void refreshTable() {
-        // Clear existing rows
         tableModel.setRowCount(0);
 
-        // Add all items from inventory to table
         ArrayList<Item> inventory = inventoryManager.getInventoryList();
         for (Item item : inventory) {
             Object[] rowData = {
@@ -419,8 +319,8 @@ public class Menu extends JFrame {
                 String.format("$%.2f", item.getPrice()),
                 item.getQuantity(),
                 String.format("$%.2f", item.getPrice() * item.getQuantity()),
-                getItemType(item),
-                getItemDetails(item)
+                inventoryManager.getItemType(item),
+                inventoryManager.getItemDetails(item)
             };
             tableModel.addRow(rowData);
         }
@@ -428,32 +328,10 @@ public class Menu extends JFrame {
         statusLabel.setText("Displaying " + inventory.size() + " items in inventory");
     }
 
-    private String getItemType(Item item) {
-        if (item instanceof ComputerPart) {
-            return "Computer Part";
-        } else if (item instanceof CarPart) {
-            return "Car Part";
-        } else {
-            return "General Item";
-        }
-    }
-
-    private String getItemDetails(Item item) {
-        if (item instanceof ComputerPart) {
-            ComputerPart cp = (ComputerPart) item;
-            return "Brand: " + cp.getBrand() + ", Specs: " + cp.getSpecs();
-        } else if (item instanceof CarPart) {
-            CarPart carPart = (CarPart) item;
-            return "Vehicle: " + carPart.getModelCompatibility();
-        } else {
-            return "N/A";
-        }
-    }
-
     private void deleteSelectedItem() {
         int selectedRow = inventoryTable.getSelectedRow();
         if (selectedRow >= 0) {
-            String itemId = (String) tableModel.getValueAt(selectedRow, 0); // Get ID from first column
+            String itemId = (String) tableModel.getValueAt(selectedRow, 0);
 
             int confirm = JOptionPane.showConfirmDialog(
                 this,
@@ -476,13 +354,13 @@ public class Menu extends JFrame {
     private void updateSelectedQuantity() {
         int selectedRow = inventoryTable.getSelectedRow();
         if (selectedRow >= 0) {
-            String itemId = (String) tableModel.getValueAt(selectedRow, 0); // Get ID from first column
-            String itemName = (String) tableModel.getValueAt(selectedRow, 1); // Get name from second column
+            String itemId = (String) tableModel.getValueAt(selectedRow, 0);
+            String itemName = (String) tableModel.getValueAt(selectedRow, 1);
 
             String newQuantityStr = JOptionPane.showInputDialog(
                 this,
                 "Enter new quantity for " + itemName + ":",
-                String.valueOf(tableModel.getValueAt(selectedRow, 3)) // Current quantity
+                String.valueOf(tableModel.getValueAt(selectedRow, 3))
             );
 
             if (newQuantityStr != null && !newQuantityStr.trim().isEmpty()) {
@@ -514,10 +392,9 @@ public class Menu extends JFrame {
             if (results.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No items found matching: " + keyword, "Search Results", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                // Create a dialog to show search results
                 StringBuilder sb = new StringBuilder("Search Results:\n\n");
                 for (Item item : results) {
-                    sb.append(itemToString(item)).append("\n");
+                    sb.append(inventoryManager.itemToString(item)).append("\n");
                 }
 
                 JTextArea textArea = new JTextArea(sb.toString());
@@ -527,23 +404,6 @@ public class Menu extends JFrame {
 
                 JOptionPane.showMessageDialog(this, scrollPane, "Search Results", JOptionPane.INFORMATION_MESSAGE);
             }
-        }
-    }
-
-    private String itemToString(Item item) {
-        if (item instanceof ComputerPart) {
-            ComputerPart cp = (ComputerPart) item;
-            return String.format("ID: %s | Name: %s | Qty: %d | Price: $%.2f | Brand: %s | Specs: %s",
-                    item.getId(), item.getName(), item.getQuantity(), item.getPrice(),
-                    cp.getBrand(), cp.getSpecs());
-        } else if (item instanceof CarPart) {
-            CarPart carPart = (CarPart) item;
-            return String.format("ID: %s | Name: %s | Qty: %d | Price: $%.2f | Vehicle: %s",
-                    item.getId(), item.getName(), item.getQuantity(), item.getPrice(),
-                    carPart.getModelCompatibility());
-        } else {
-            return String.format("ID: %s | Name: %s | Qty: %d | Price: $%.2f",
-                    item.getId(), item.getName(), item.getQuantity(), item.getPrice());
         }
     }
 

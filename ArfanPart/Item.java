@@ -49,4 +49,6 @@ public abstract class Item {
     public String toString() {
         return getId() + "," + getName() + "," + getQuantity() + "," + getPrice();
     }
+
+    public abstract String toFileFormat();
 }

@@ -38,5 +38,17 @@ public class UserManager {
     public void registerUser(User user) {
         userList.add(user);
     }
+
+    public void simulateAdminLogin() {
+        authenticate("admin", "admin123");
+    }
+
+    public String getUserStatusMessage() {
+        User currentUser = getLoggedInUser();
+        if (currentUser != null) {
+            return "Welcome, " + currentUser.getUsername() + " (" + currentUser.getRole() + ")";
+        }
+        return "Welcome to the Inventory Management System";
+    }
 }
 

@@ -20,4 +20,10 @@ public class CarPart extends Item {
     public String toString() {
         return getId() + "," + getName() + "," + getQuantity() + "," + getPrice() + "," + modelCompatibility;
     }
+
+    @Override
+    public String toFileFormat() {
+        return getId() + "|" + getName() + "|" + getQuantity() + "|" + getPrice() + "|" +
+               getModelCompatibility() + "|CAR_PART";
+    }
 }

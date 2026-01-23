@@ -30,4 +30,10 @@ public class ComputerPart extends Item {
     public String toString() {
         return getId() + "," + getName() + "," + getQuantity() + "," + getPrice() + "," + brand + "," + specs;
     }
+
+    @Override
+    public String toFileFormat() {
+        return getId() + "|" + getName() + "|" + getQuantity() + "|" + getPrice() + "|" +
+               getBrand() + "|" + getSpecs() + "|COMPUTER_PART";
+    }
 }

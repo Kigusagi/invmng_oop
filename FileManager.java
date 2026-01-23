@@ -16,13 +16,15 @@ public class FileManager {
             PrintWriter pw = new PrintWriter(fw);
 
             for (Item item : inventoryList) {
-                pw.println(item.toString());
+                pw.println(item.toFileFormat());
             }
 
             pw.close();
             fw.close();
+
+            System.out.println("Inventory saved successfully.");
         } catch (IOException e) {
-            System.out.println("Error saving inventory.");
+            System.out.println("Error saving inventory: " + e.getMessage());
         }
     }
 
@@ -35,37 +37,40 @@ public class FileManager {
             String line;
 
             while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
+                String[] data = line.split("\\|");
 
-                if (data.length == 6) {
-                    inventoryList.add(
-                        new ComputerPart(
-                            data[0],
-                            data[1],
-                            Integer.parseInt(data[2]),
-                            Double.parseDouble(data[3]),
-                            data[4],
-                            data[5]
-                        )
-                    );
-                }
-                else if (data.length == 5) {
-                    inventoryList.add(
-                        new CarPart(
-                            data[0],
-                            data[1],
-                            Integer.parseInt(data[2]),
-                            Double.parseDouble(data[3]),
-                            data[4]
-                        )
-                    );
+                if (data.length >= 6) {
+                    if (data[data.length-1].trim().equals("COMPUTER_PART")) {
+                        inventoryList.add(
+                            new ComputerPart(
+                                data[0].trim(),
+                                data[1].trim(),
+                                Integer.parseInt(data[2].trim()),
+                                Double.parseDouble(data[3].trim()),
+                                data[4].trim(),
+                                data[5].trim()
+                            )
+                        );
+                    } else if (data[data.length-1].trim().equals("CAR_PART") && data.length >= 5) {
+                        inventoryList.add(
+                            new CarPart(
+                                data[0].trim(),
+                                data[1].trim(),
+                                Integer.parseInt(data[2].trim()),
+                                Double.parseDouble(data[3].trim()),
+                                data[4].trim()
+                            )
+                        );
+                    }
                 }
             }
 
             br.close();
             fr.close();
         } catch (IOException e) {
-            System.out.println("inventory.txt not found.");
+            System.out.println("inventory.txt not found or error reading file: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing numeric values from inventory file: " + e.getMessage());
         }
 
         return inventoryList;
